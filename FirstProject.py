@@ -17,11 +17,12 @@ while not gameExit:
 			gameExit = True
 		elif event.type == pygame.KEYDOWN:
 			if event.key == pygame.K_UP:
-				myPlayer.changeState(player.States.JUMPING)
+				myPlayer.changeMovementState(player.MovementStates.JUMPING)
 			elif event.key == pygame.K_DOWN:
-				myPlayer.changeState(player.States.RUNNING)
+				myPlayer.changeMovementState(player.MovementStates.RUNNING)
 
-	display.updatePlayerData(myPlayer.stepFrame())
+	myPlayer.stepFrame()
+	display.updatePlayerData(myPlayer.getCurrentPlayerState())
 	display.updateScreen()
 	clock.tick(30)
 	

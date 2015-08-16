@@ -4,61 +4,82 @@ import elements
 from enum import Enum
 import math
 
-class States(Enum):
-    RUNNING = 0
-    JUMPING = 1
+class MovementStates(Enum):
+	RUNNING = 0
+	JUMPING = 1
 
 class Player:
 
-    FRAMES_PER_IMAGE = 3
-    IMAGES_PER_SHEET = 8
+	FRAMES_PER_IMAGE = 3
+	IMAGES_PER_SHEET = 8
+	TOTAL_FRAMES_PER_SHEET = FRAMES_PER_IMAGE*IMAGES_PER_SHEET
+	MAX_JUMP_HEIGHT_PX = 200
+	
+	#Coefficient used to calculate jump motion
+	PARABOLA_COEFF = -4*MAX_JUMP_HEIGHT_PX/math.pow(TOTAL_FRAMES_PER_SHEET,2)
 
-    JUMP_HEIGHT_PIXELS = 200
+	def __init__(self):
+		self.currentFrame = 0
+		self.currentImage = 0
+		self.currentMovementState = MovementStates.RUNNING
+		self.currentElement = elements.Elements.NORMAL
 
-    def __init__(self):
-        self.currentFrame = 0
-        self.currentImage = 0
-        self.currentState = States.RUNNING
-        self.currentElement = elements.Elements.NORMAL
+		self.sheets = [createSheetForElement(e) for e in elements.Elements]
+			
+	def getCurrentImage(self):
+		sheet = self.getCurrentSheet()
+		state = sheet.getStateSheet(self.currentMovementState.value)
+		image = state.getImage(self.currentImage)
+		return image
+		
+	def getCurrentSheet(self):
+		return self.sheets[self.currentElement.value]
+		
+	def stepFrame(self):
+		self.currentFrame += 1
+		self.checkForFrameRollover()
 
-        self.sheets = []
-        for element in elements.Elements:
-            self.sheets.append(formSheet.FormSheet(elements.getElementSheetFile(element.name)))
+	def checkForFrameRollover(self):
+		if Player.FRAMES_PER_IMAGE == self.currentFrame:
+			self.currentFrame = 0
+			self.currentImage += 1
+			self.checkForImageRollover()
+					
+	def checkForImageRollover(self):
+		if Player.IMAGES_PER_SHEET == self.currentImage:
+			self.currentImage = 0
+			self.checkForEndOfJump()
+					
+	def checkForEndOfJump(self):
+		if MovementStates.JUMPING == self.currentMovementState:
+			self.currentMovementState = MovementStates.RUNNING
+			
+	def getCurrentPlayerState(self):
+		return PlayerState(self.getCurrentImage(), self.calculateHeight())
+			
+	def changeMovementState(self, state):
+		if self.currentMovementState is not state:
+			self.currentMovementState = state
+			self.currentFrame = self.currentImage = 0
 
-    def getCurrentImage(self):
-        return self.sheets[self.currentElement.value].getStateSheet(self.currentState.value).getImage(self.currentImage)
+	def calculateHeight(self):
+		return (self.calculateHeightOfJump() if self.isPlayerJumping() else 0)
 
-    def stepFrame(self):
-        self.currentFrame += 1
-        if Player.FRAMES_PER_IMAGE == self.currentFrame:
-            self.currentFrame = 0
-            self.currentImage += 1
-            if Player.IMAGES_PER_SHEET == self.currentImage:
-                self.currentImage = 0
-                if States.JUMPING == self.currentState:
-                    self.currentState = States.RUNNING
-
-        if States.JUMPING == self.currentState:
-            return PlayerState(self.getCurrentImage(), self.calculateHeight())
-        else:
-            return PlayerState(self.getCurrentImage(), 0)
-
-    def changeState(self, state):
-        if self.currentState is not state:
-            self.currentState = state
-            self.currentFrame = 0
-            self.currentImage = 0
-
-    def calculateHeight(self):
-        ### Parabolic Motion
-        frameCount = (Player.FRAMES_PER_IMAGE*self.currentImage)+self.currentFrame
-        midpoint = Player.FRAMES_PER_IMAGE*Player.IMAGES_PER_SHEET/2
-        maxHeight = Player.JUMP_HEIGHT_PIXELS/(midpoint*midpoint)
-        coeff = -1*maxHeight
-        height = coeff*(frameCount)*(frameCount-Player.FRAMES_PER_IMAGE*Player.IMAGES_PER_SHEET)
-        height = math.floor(height)
-        return height
-
+	def isPlayerJumping(self):
+		return MovementStates.JUMPING == self.currentMovementState
+		
+	def calculateHeightOfJump(self):
+		### Parabolic Motion
+		frameCount = self.getAdjustedFrameCount()
+		height = Player.PARABOLA_COEFF*(frameCount)*(frameCount-Player.TOTAL_FRAMES_PER_SHEET)
+		return math.floor(height)
+	
+	def getAdjustedFrameCount(self):
+		return (Player.FRAMES_PER_IMAGE*self.currentImage)+self.currentFrame
+		
+def createSheetForElement(element):
+	return formSheet.FormSheet(elements.getElementSheetFile(element.name))
+		
 class PlayerState:
 	def __init__(self, image, height):
 		self.image = image
