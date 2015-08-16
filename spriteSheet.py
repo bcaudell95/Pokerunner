@@ -7,7 +7,7 @@ class spritesheet(object):
 		try:
 			self.loadImageRects()
 		except pygame.error as message:
-			print('Unable to load spritesheet image:', filename)
+			print('Unable to load spritesheet image:', fileData.filename)
 			quit()
 			
 	def loadImageRects(self):
