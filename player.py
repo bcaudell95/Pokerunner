@@ -39,9 +39,9 @@ class Player:
                     self.currentState = States.RUNNING
 
         if States.JUMPING == self.currentState:
-            return [self.getCurrentImage(), self.calculateHeight()]
+            return PlayerState(self.getCurrentImage(), self.calculateHeight())
         else:
-            return [self.getCurrentImage(), 0]
+            return PlayerState(self.getCurrentImage(), 0)
 
     def changeState(self, state):
         if self.currentState is not state:
@@ -58,3 +58,9 @@ class Player:
         height = coeff*(frameCount)*(frameCount-Player.FRAMES_PER_IMAGE*Player.IMAGES_PER_SHEET)
         height = math.floor(height)
         return height
+
+class PlayerState:
+	def __init__(self, image, height):
+		self.image = image
+		self.height = height
+		
