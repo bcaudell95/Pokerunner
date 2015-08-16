@@ -1,6 +1,6 @@
 import pygame
-import formSheet
-import elements
+import FormSheet
+import Elements
 from enum import Enum
 import math
 
@@ -22,9 +22,9 @@ class Player:
 		self.currentFrame = 0
 		self.currentImage = 0
 		self.currentMovementState = MovementStates.RUNNING
-		self.currentElement = elements.Elements.NORMAL
+		self.currentElement = Elements.Elements.NORMAL
 
-		self.sheets = [createSheetForElement(e) for e in elements.Elements]
+		self.sheets = [createSheetForElement(e) for e in Elements.Elements]
 			
 	def getCurrentImage(self):
 		sheet = self.getCurrentSheet()
@@ -78,7 +78,7 @@ class Player:
 		return (Player.FRAMES_PER_IMAGE*self.currentImage)+self.currentFrame
 		
 def createSheetForElement(element):
-	return formSheet.FormSheet(elements.getElementSheetFile(element.name))
+	return FormSheet.FormSheet(Elements.getElementSheetFile(element.name))
 		
 class PlayerState:
 	def __init__(self, image, height):

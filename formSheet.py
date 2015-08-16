@@ -1,4 +1,4 @@
-import spriteSheet
+import SpriteSheet
 
 class FormSheet(object):
 
@@ -14,9 +14,9 @@ class FormSheet(object):
 			self.loadSheetByIndex(i)
 	
 	def loadSheetByIndex(self, index):
-		fileData = spriteSheet.SpriteSheetFile(self.filename, index*FormSheet.SHEET_DIMENSIONS[1])
-		dimensions = spriteSheet.SpriteSheetDimensions(FormSheet.SHEET_DIMENSIONS, FormSheet.ROWS)
-		self.sheets.append(spriteSheet.spritesheet(fileData, dimensions))
+		fileData = SpriteSheet.SpriteSheetFile(self.filename, index*FormSheet.SHEET_DIMENSIONS[1])
+		dimensions = SpriteSheet.SpriteSheetDimensions(FormSheet.SHEET_DIMENSIONS, FormSheet.ROWS)
+		self.sheets.append(SpriteSheet.spritesheet(fileData, dimensions))
 	
 	def getStateSheet(self, i):
 		return self.sheets[i]

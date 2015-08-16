@@ -1,6 +1,6 @@
 import pygame
-import display
-import player
+import Display
+import Player
 
 class Pokerunner:
 
@@ -10,8 +10,8 @@ class Pokerunner:
 		pygame.init()
 
 		self.clock = pygame.time.Clock()
-		self.display = display.Display()
-		self.player = player.Player()
+		self.display = Display.Display()
+		self.player = Player.Player()
 
 		self.gameExit = False
 		
@@ -41,7 +41,7 @@ class Pokerunner:
 		
 	def handleKeyEvent(self, event):
 		if event.key == pygame.K_UP:
-			self.player.changeMovementState(player.MovementStates.JUMPING)
+			self.player.changeMovementState(Player.MovementStates.JUMPING)
 					
 	def endGame(self):
 		pygame.quit()
