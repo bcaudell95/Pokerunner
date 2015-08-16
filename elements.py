@@ -7,4 +7,7 @@ elementImagesDict = {'NORMAL': 'runningcat_50.png'}
 
 def getElementSheetFile(element):
 	imagesDirectory = 'assets/images/'
-	return imagesDirectory + elementImagesDict[element]
+	if element in elementImagesDict.keys():
+		return imagesDirectory + elementImagesDict[element]
+	else:
+		return ''
