@@ -1,6 +1,13 @@
 import pygame
-import Display
-import Player
+from GameStates.GamePlayingState import GamePlayingStateManager
+from GameStates.MainMenuState import MainMenuStateManager
+from enum import Enum
+
+class GameState(Enum):
+	MAIN_MENU = 0
+	PLAYING = 1
+	PAUSED = 2
+	CREDITS = 3
 
 class Pokerunner:
 
@@ -10,8 +17,8 @@ class Pokerunner:
 		pygame.init()
 
 		self.clock = pygame.time.Clock()
-		self.display = Display.Display()
-		self.player = Player.Player()
+		self.gameState = GameState.MAIN_MENU
+		self.manager = GamePlayingStateManager.GamePlayingStateManager()
 
 		self.gameExit = False
 		
@@ -21,30 +28,22 @@ class Pokerunner:
 		while not self.gameExit:
 			self.handleEvents()
 			
-			self.player.stepFrame()
-			self.display.updatePlayerData(self.player.getCurrentPlayerState())
-			self.display.updateScreen()
+			self.manager.tick()
+			
 			self.clock.tick(Pokerunner.FRAMES_PER_SECOND)
-
+			
 	def handleEvents(self):
 		for event in pygame.event.get():
-			if self.isEventQuit(event):
+			if isEventQuit(event):
 				self.gameExit = True
-			elif self.isEventKeyDown(event):
-				self.handleKeyEvent(event)
-					
-	def isEventQuit(self, event):
-		return event.type == pygame.QUIT
-		
-	def isEventKeyDown(self, event):
-		return event.type == pygame.KEYDOWN
-		
-	def handleKeyEvent(self, event):
-		if event.key == pygame.K_UP:
-			self.player.changeMovementState(Player.MovementStates.JUMPING)
+			else:
+				self.manager.handleEvent(event)
 					
 	def endGame(self):
 		pygame.quit()
 		quit()
 
+def isEventQuit(event):
+	return event.type == pygame.QUIT
+		
 Pokerunner()

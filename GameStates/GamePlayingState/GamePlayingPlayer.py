@@ -8,7 +8,7 @@ class MovementStates(Enum):
 	RUNNING = 0
 	JUMPING = 1
 
-class Player:
+class GamePlayingPlayer:
 
 	FRAMES_PER_IMAGE = 3
 	IMAGES_PER_SHEET = 8
@@ -40,13 +40,13 @@ class Player:
 		self.checkForFrameRollover()
 
 	def checkForFrameRollover(self):
-		if Player.FRAMES_PER_IMAGE == self.currentFrame:
+		if GamePlayingPlayer.FRAMES_PER_IMAGE == self.currentFrame:
 			self.currentFrame = 0
 			self.currentImage += 1
 			self.checkForImageRollover()
 					
 	def checkForImageRollover(self):
-		if Player.IMAGES_PER_SHEET == self.currentImage:
+		if GamePlayingPlayer.IMAGES_PER_SHEET == self.currentImage:
 			self.currentImage = 0
 			self.checkForEndOfJump()
 					
@@ -71,11 +71,11 @@ class Player:
 	def calculateHeightOfJump(self):
 		### Parabolic Motion
 		frameCount = self.getAdjustedFrameCount()
-		height = Player.PARABOLA_COEFF*(frameCount)*(frameCount-Player.TOTAL_FRAMES_PER_SHEET)
+		height = GamePlayingPlayer.PARABOLA_COEFF*(frameCount)*(frameCount-GamePlayingPlayer.TOTAL_FRAMES_PER_SHEET)
 		return math.floor(height)
 	
 	def getAdjustedFrameCount(self):
-		return (Player.FRAMES_PER_IMAGE*self.currentImage)+self.currentFrame
+		return (GamePlayingPlayer.FRAMES_PER_IMAGE*self.currentImage)+self.currentFrame
 		
 def createSheetForElement(element):
 	return FormSheet.FormSheet(Elements.getElementSheetFile(element.name))

@@ -1,8 +1,7 @@
 import pygame
+from GUI import GuiConfig
 
-class Display:
-
-	screenSize = (1024,768)
+class GamePlayingDisplay:
 	backdropSize = (3072,768)
 
 	backdropFiles = ['assets/images/backdrop.png', 'assets/images/backdrop1.png']
@@ -12,7 +11,7 @@ class Display:
 	playerSpeedX = 10
 
 	def __init__(self):
-		self.screen = pygame.display.set_mode(Display.screenSize)
+		self.screen = pygame.display.set_mode(GuiConfig.screenSize)
 		self.currentBackdropIndex = 0
 		self.playerX = 0
 
@@ -26,11 +25,14 @@ class Display:
 		self.movePlayer()
 			
 	def movePlayer(self):
-		self.playerX += Display.playerSpeedX
-		if self.playerX >= Display.backdropSize[0]:
-			self.playerX -= Display.backdropSize[0]
-			self.endOfBackdropReached()
+		self.playerX += GamePlayingDisplay.playerSpeedX
+		self.checkPlayerRollover()
 
+	def checkPlayerRollover(self):
+		if self.playerX >= GamePlayingDisplay.backdropSize[0]:
+			self.playerX -= GamePlayingDisplay.backdropSize[0]
+			self.endOfBackdropReached()
+			
 	def drawBackdrop(self):
 		self.drawImage(self.getCurrentBackdrop(), self.getCoordinatesForCurrentBackdrop())
 		if self.isBackDropBoundaryVisible():
@@ -40,32 +42,32 @@ class Display:
 		self.screen.blit(image, coordinates)
 		
 	def getCurrentBackdrop(self):
-		return Display.backdrops[self.currentBackdropIndex]
+		return GamePlayingDisplay.backdrops[self.currentBackdropIndex]
 		
 	def getCoordinatesForCurrentBackdrop(self):
 		return (-1 * self.playerX,0)
 		
 	def isBackDropBoundaryVisible(self):
-		return self.playerX >= Display.backdropSize[0] - Display.screenSize[0]
+		return self.playerX >= GamePlayingDisplay.backdropSize[0] - GuiConfig.screenSize[0]
 	
 	def getCoordinatesForNextBackdrop(self):
-		return (Display.backdropSize[0] - self.playerX, 0)
+		return (GamePlayingDisplay.backdropSize[0] - self.playerX, 0)
 	
 	def getNextBackdrop(self):
-		if self.currentBackdropIndex + 1 < len(Display.backdrops):
-			return Display.backdrops[self.currentBackdropIndex + 1]
+		if self.currentBackdropIndex + 1 < len(GamePlayingDisplay.backdrops):
+			return GamePlayingDisplay.backdrops[self.currentBackdropIndex + 1]
 		else:
-			return Display.backdrops[0]
+			return GamePlayingDisplay.backdrops[0]
 		
 	def endOfBackdropReached(self):
 		self.currentBackdropIndex += 1
-		if self.currentBackdropIndex == len(Display.backdrops):
+		if self.currentBackdropIndex == len(GamePlayingDisplay.backdrops):
 			self.currentBackdropIndex = 0
 			
 	def drawPlayer(self):
 		self.drawImage(self.playerState.image, self.calculatePlayerDrawCoordinates())
 	
 	def calculatePlayerDrawCoordinates(self):
-		x = Display.playerDrawCoordinates[0]
-		y = Display.playerDrawCoordinates[1] - self.playerState.height
+		x = GamePlayingDisplay.playerDrawCoordinates[0]
+		y = GamePlayingDisplay.playerDrawCoordinates[1] - self.playerState.height
 		return (x,y)
