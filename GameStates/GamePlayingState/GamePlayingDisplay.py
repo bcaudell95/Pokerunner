@@ -10,15 +10,14 @@ class GamePlayingDisplay:
 	playerDrawCoordinates = (100, 512)
 	playerSpeedX = 10
 
-	def __init__(self):
-		self.screen = pygame.display.set_mode(GuiConfig.screenSize)
+	def __init__(self, screen):
 		self.currentBackdropIndex = 0
 		self.playerX = 0
+		self.screen = screen
 
 	def updateScreen(self):
 		self.drawBackdrop()
 		self.drawPlayer()
-		pygame.display.update()
 
 	def updatePlayerData(self, playerState):
 		self.playerState = playerState
