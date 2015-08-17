@@ -18,3 +18,6 @@ class MainMenuStateManager(object):
 	def changeMouseOver(self, newMousePos):
 		self.mousePos = newMousePos
 		
+	def reset(self):
+		pass
+		

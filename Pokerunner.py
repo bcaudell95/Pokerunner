@@ -2,6 +2,7 @@ import pygame
 from GameStates import GameStates
 from GameStates.GamePlayingState import GamePlayingStateManager
 from GameStates.MainMenuState import MainMenuStateManager
+from GameStates.PauseState import PauseStateManager
 from GUI import GuiConfig
 
 class Pokerunner:
@@ -10,7 +11,8 @@ class Pokerunner:
 	FRAMES_PER_SECOND = 30
 	stateManagersDict = { 
 		GameStates.GameState.MAIN_MENU: MainMenuStateManager.MainMenuStateManager(SCREEN),
-		GameStates.GameState.PLAYING : GamePlayingStateManager.GamePlayingStateManager(SCREEN) 
+		GameStates.GameState.PLAYING : GamePlayingStateManager.GamePlayingStateManager(SCREEN),
+		GameStates.GameState.PAUSED : PauseStateManager.PauseStateManager(SCREEN)
 		}
 
 	def __init__(self):
@@ -38,12 +40,16 @@ class Pokerunner:
 			if isEventQuit(event):
 				self.gameExit = True
 			else:
-				try:
-					self.manager.handleEvent(event)
-				except GameStates.StateTransition as e:
-					self.transitionTo(e.stateToTransitionTo)
+				self.sendEventToManager(event)
+	
+	def sendEventToManager(self, event):
+		try:
+			self.manager.handleEvent(event)
+		except GameStates.StateTransition as e:
+			self.transitionTo(e.stateToTransitionTo)
 	
 	def transitionTo(self, state):
+		self.manager.reset()
 		self.manager = Pokerunner.stateManagersDict[state]
 	
 	def endGame(self):

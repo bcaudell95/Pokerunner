@@ -5,7 +5,6 @@ from GameStates.GamePlayingState import GamePlayingPlayer
 
 class GamePlayingStateManager(object):
 	def __init__(self, screen):
-		self.stateToTransitionTo = None
 		self.display = GamePlayingDisplay.GamePlayingDisplay(screen)
 		self.player = GamePlayingPlayer.GamePlayingPlayer()
 		
@@ -24,6 +23,11 @@ class GamePlayingStateManager(object):
 	def handleKeyEvent(self, event):
 		if event.key == pygame.K_UP:
 			self.player.changeMovementState(GamePlayingPlayer.MovementStates.JUMPING)
+		elif event.key == pygame.K_p:
+			transitionToPaused()
 			
-	def stateToTransitionTo(self):
-		return self.stateToTransitionTo
+	def reset(self):
+		pass
+
+def transitionToPaused():
+	raise GameStates.StateTransition(GameStates.GameState.PAUSED)
