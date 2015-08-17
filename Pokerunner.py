@@ -37,10 +37,13 @@ class Pokerunner:
 			
 	def handleEvents(self):
 		for event in pygame.event.get():
-			if isEventQuit(event):
-				self.gameExit = True
-			else:
-				self.sendEventToManager(event)
+			self.handleEvent(event)
+			
+	def handleEvent(self, event):
+		if isEventQuit(event):
+			self.gameExit = True
+		else:
+			self.sendEventToManager(event)
 	
 	def sendEventToManager(self, event):
 		try:
