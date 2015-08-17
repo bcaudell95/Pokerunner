@@ -9,14 +9,18 @@ class FormSheet(object):
 	
 	def __init__(self, filename):
 		self.filename = filename
+		self.loadSpriteSheets()
+			
+	def loadSpriteSheets(self):
 		self.sheets = []
 		for i in range(FormSheet.STATES_COUNT):
 			self.loadSheetByIndex(i)
 	
 	def loadSheetByIndex(self, index):
-		fileData = SpriteSheet.SpriteSheetFile(self.filename, index*FormSheet.SHEET_DIMENSIONS[1])
+		yOffsetInImage = index*FormSheet.SHEET_DIMENSIONS[1]
+		fileData = SpriteSheet.SpriteSheetFile(self.filename, yOffsetInImage)
 		dimensions = SpriteSheet.SpriteSheetDimensions(FormSheet.SHEET_DIMENSIONS, FormSheet.ROWS)
-		self.sheets.append(SpriteSheet.spritesheet(fileData, dimensions))
+		self.sheets.append(SpriteSheet.SpriteSheet(fileData, dimensions))
 	
 	def getStateSheet(self, i):
 		return self.sheets[i]

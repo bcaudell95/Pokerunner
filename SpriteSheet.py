@@ -1,13 +1,15 @@
 import pygame
 
-class spritesheet(object):
+class SpriteSheet(object):
+	TRANS_BLACK_RGBA = (0,0,0,0)
+
 	def __init__(self, fileData, sheetDimensions ):
 		self.fileData = fileData
 		self.sheetDimensions = sheetDimensions
 		try:
 			self.loadImageRects()
 		except pygame.error as message:
-			print('Unable to load spritesheet image:', fileData.filename)
+			print('Unable to load SpriteSheet image:', fileData.filename)
 			quit()
 			
 	def loadImageRects(self):
@@ -23,12 +25,14 @@ class spritesheet(object):
 	def imageRectByIndex(self, index):
 		width = self.sheetDimensions.width
 		height = self.sheetDimensions.height/self.sheetDimensions.rows
-		return (0, index*height + self.fileData.yOffsetInImage, width, height)
+		x = 0
+		y = index*height + self.fileData.yOffsetInImage
+		return (x, y , width, height)
 		
 	def loadImageRect(self, r):
 		rect = pygame.Rect(r)
 		image = pygame.Surface(rect.size).convert_alpha()
-		image.fill((0,0,0,0))
+		image.fill(SpriteSheet.TRANS_BLACK_RGBA)
 		image.blit(self.sheet, (0,0), rect)
 		return image
 	

@@ -28,12 +28,16 @@ class Pokerunner:
 
 	def startMainLoop(self):
 		while not self.gameExit:
-			self.handleEvents()
-			
-			self.manager.tick()
-			pygame.display.update()
-			
-			self.clock.tick(Pokerunner.FRAMES_PER_SECOND)
+			self.iterateMainLoop()
+		self.endGame()
+		
+	def iterateMainLoop(self):
+		self.handleEvents()
+		
+		self.manager.tick()
+		pygame.display.update()
+		
+		self.clock.tick(Pokerunner.FRAMES_PER_SECOND)
 			
 	def handleEvents(self):
 		for event in pygame.event.get():
