@@ -24,9 +24,9 @@ class Pokerunner:
 
 		self.gameExit = False
 		
-		self.mainLoop()
+		self.startMainLoop()
 
-	def mainLoop(self):
+	def startMainLoop(self):
 		while not self.gameExit:
 			self.handleEvents()
 			

@@ -11,12 +11,9 @@ class MainMenuStateManager(object):
 	
 	def handleEvent(self, event):
 		if pygame.MOUSEMOTION == event.type:
-			self.display.setMouseCoords(pygame.mouse.get_pos())
+			self.display.updateMouseAndButtons(pygame.mouse.get_pos())
 		elif pygame.MOUSEBUTTONDOWN == event.type:
-			self.display.clicked(pygame.mouse.get_pressed())
-	
-	def changeMouseOver(self, newMousePos):
-		self.mousePos = newMousePos
+			self.display.handleClick(pygame.mouse.get_pressed())
 		
 	def reset(self):
 		pass

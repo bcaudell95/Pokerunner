@@ -5,6 +5,7 @@ from GameStates import GameStates
 
 class MainMenuDisplay(object):
 	BACKGROUND_IMAGE_FILE = 'assets/images/MainMenu.png'
+	BACKGROUND_IMAGE = pygame.image.load(BACKGROUND_IMAGE_FILE)
 	
 	START_BUTTON_IMAGES = ['assets/images/Start_on.png', 'assets/images/Start_off.png']
 	START_BUTTON_RECT = (412, 400, 200,100)
@@ -20,7 +21,7 @@ class MainMenuDisplay(object):
 		self.drawStartButton()
 		
 	def drawBackground(self):
-		self.drawImage(pygame.image.load(MainMenuDisplay.BACKGROUND_IMAGE_FILE), (0,0))
+		self.drawImage(MainMenuDisplay.BACKGROUND_IMAGE, (0,0))
 		
 	def drawStartButton(self):
 		self.drawImage(self.startButton.getImage(), MainMenuDisplay.START_BUTTON_DRAW_COORDS)
@@ -28,18 +29,21 @@ class MainMenuDisplay(object):
 	def drawImage(self, image, coordinates):
 		self.screen.blit(image, coordinates)
 		
-	def setMouseCoords(self, coords):
+	def updateMouseAndButtons(self, coords):
 		self.mousePos = coords
 		self.updateButtonStates()
 		
 	def updateButtonStates(self):
 		self.startButton.setState(isPointInRect(self.mousePos, MainMenuDisplay.START_BUTTON_RECT))
 		
-	def clicked(self, clickStates):
+	def handleClick(self, clickStates):
 		if isLeftClick(clickStates):
-			if self.startButton.rolloverOn:
-				self.transitionToGame()
+			self.handleLeftClick()
 			
+	def handleLeftClick(self):
+		if self.startButton.rolloverOn:
+			self.transitionToGame()
+	
 	def transitionToGame(self):
 		raise GameStates.StateTransition(GameStates.GameState.PLAYING)
 	
