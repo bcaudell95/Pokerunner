@@ -5,6 +5,8 @@ from GameStates.MainMenuState import MainMenuStateManager
 from GameStates.PauseState import PauseStateManager
 from GUI import GuiConfig
 
+pygame.init()
+
 class Pokerunner:
 
 	SCREEN = pygame.display.set_mode(GuiConfig.screenSize)
@@ -16,8 +18,6 @@ class Pokerunner:
 		}
 
 	def __init__(self):
-		pygame.init()
-
 		self.clock = pygame.time.Clock()
 		self.gameState = GameStates.GameState.MAIN_MENU
 		self.manager = Pokerunner.stateManagersDict[GameStates.GameState.MAIN_MENU]

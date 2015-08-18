@@ -10,6 +10,8 @@ class GamePlayingStateManager(object):
 		
 	def tick(self):
 		self.player.stepFrame()
+		self.player.incrementScore()
+		self.display.setScore(self.player.getScore())
 		self.display.updatePlayerData(self.player.getCurrentPlayerState())
 		self.display.updateScreen()
 		

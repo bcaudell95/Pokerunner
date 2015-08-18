@@ -15,6 +15,8 @@ class GamePlayingPlayer:
 	TOTAL_FRAMES_PER_SHEET = FRAMES_PER_IMAGE*IMAGES_PER_SHEET
 	MAX_JUMP_HEIGHT_PX = 200
 	
+	SCORE_DELTA = 10
+	
 	#Coefficient used to calculate jump motion
 	PARABOLA_COEFF = -4*MAX_JUMP_HEIGHT_PX/math.pow(TOTAL_FRAMES_PER_SHEET,2)
 
@@ -23,6 +25,7 @@ class GamePlayingPlayer:
 		self.currentImage = 0
 		self.currentMovementState = MovementStates.RUNNING
 		self.currentElement = Elements.Elements.NORMAL
+		self.score = 0
 
 		self.sheets = [createSheetForElement(e) for e in Elements.Elements]
 			
@@ -53,6 +56,12 @@ class GamePlayingPlayer:
 	def checkForEndOfJump(self):
 		if MovementStates.JUMPING == self.currentMovementState:
 			self.currentMovementState = MovementStates.RUNNING
+			
+	def incrementScore(self):
+		self.score += GamePlayingPlayer.SCORE_DELTA
+		
+	def getScore(self):
+		return self.score
 			
 	def getCurrentPlayerState(self):
 		return PlayerState(self.getCurrentImage(), self.calculateHeight())

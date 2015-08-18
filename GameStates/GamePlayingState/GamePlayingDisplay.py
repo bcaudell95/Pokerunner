@@ -1,6 +1,8 @@
 import pygame
 from GUI import GuiConfig
 
+pygame.font.init()
+
 class GamePlayingDisplay:
 	backdropSize = (3072,768)
 
@@ -9,14 +11,27 @@ class GamePlayingDisplay:
 	
 	playerDrawCoordinates = (100, 512)
 	playerSpeedX = 10
+	
+	scoreBorderImage = pygame.image.load('assets/images/ScoreBorder.png')
+	scoreBorderDimensions = (256, 64)
+	
+	scoreFontFile = 'assets/fonts/AndaleMono.ttf'
+	scoreFont = pygame.font.Font(scoreFontFile, 48)
+	scoreFontColor = (0,0,0)
+	scoreCountDrawCoords = (5,10)
 
 	def __init__(self, screen):
 		self.currentBackdropIndex = 0
 		self.playerX = 0
+		self.score = 0
 		self.screen = screen
 
+	def setScore(self, score):
+		self.score  = score
+		
 	def updateScreen(self):
 		self.drawBackdrop()
+		self.drawScore()
 		self.drawPlayer()
 
 	def updatePlayerData(self, playerState):
@@ -62,6 +77,23 @@ class GamePlayingDisplay:
 		self.currentBackdropIndex += 1
 		if self.currentBackdropIndex == len(GamePlayingDisplay.backdrops):
 			self.currentBackdropIndex = 0
+			
+	def drawScore(self):
+		self.drawScoreBorder()
+		self.drawScoreCounter()
+		
+	def drawScoreBorder(self):
+		self.drawImage(GamePlayingDisplay.scoreBorderImage, (0,0))
+		
+	def drawScoreCounter(self):
+		self.drawImage(self.getScoreNumberImage(), GamePlayingDisplay.scoreCountDrawCoords)
+			
+	def getScoreNumberImage(self):
+		scoreString = self.getScoreAsFormattedString()
+		return GamePlayingDisplay.scoreFont.render(scoreString, True, GamePlayingDisplay.scoreFontColor)
+		
+	def getScoreAsFormattedString(self):
+		return '{0:08d}'.format(self.score)
 			
 	def drawPlayer(self):
 		self.drawImage(self.playerState.image, self.calculatePlayerDrawCoordinates())
