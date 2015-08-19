@@ -1,5 +1,6 @@
 import pygame
 from GUI import GuiConfig
+from GameStates.GamePlayingState import Obstacle
 
 pygame.font.init()
 
@@ -25,12 +26,16 @@ class GamePlayingDisplay:
 		self.playerX = 0
 		self.score = 0
 		self.screen = screen
+		self.obstaclesList = []
+		self.spawnNewObstacle(Obstacle.Obstacles.basicObstacle)
 
 	def setScore(self, score):
 		self.score  = score
 		
 	def updateScreen(self):
 		self.drawBackdrop()
+		self.drawObstacles()
+		self.moveObstacles()
 		self.drawScore()
 		self.drawPlayer()
 
@@ -78,6 +83,23 @@ class GamePlayingDisplay:
 		if self.currentBackdropIndex == len(GamePlayingDisplay.backdrops):
 			self.currentBackdropIndex = 0
 			
+	def drawObstacles(self):
+		for ob in self.obstaclesList:
+			image = ob[0].getImage()
+			coords = ob[1]
+			self.drawImage(image, coords)
+			
+	def moveObstacles(self):
+		for ob in self.obstaclesList:
+			oldCoords = ob[1]
+			newCoords = (oldCoords[0] - GamePlayingDisplay.playerSpeedX, oldCoords[1])
+			imageWidth = ob[0].getImage().get_size()[0]
+			if(newCoords[0] + imageWidth > 0):
+				ob[1] = newCoords
+			else:
+				self.obstaclesList.pop()
+				self.spawnNewObstacle(Obstacle.Obstacles.basicObstacle)
+			
 	def drawScore(self):
 		self.drawScoreBorder()
 		self.drawScoreCounter()
@@ -102,3 +124,8 @@ class GamePlayingDisplay:
 		x = GamePlayingDisplay.playerDrawCoordinates[0]
 		y = GamePlayingDisplay.playerDrawCoordinates[1] - self.playerState.height
 		return (x,y)
+		
+	def spawnNewObstacle(self, obstacle):
+		coords = (GuiConfig.screenSize[0], GuiConfig.floorY - obstacle.getImage().get_size()[1])
+		newObstacle = [obstacle, coords]
+		self.obstaclesList.append(newObstacle)
