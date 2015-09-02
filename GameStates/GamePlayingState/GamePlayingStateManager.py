@@ -1,18 +1,24 @@
 import pygame
 from GameStates.GameStates import GameState, StateTransition
 from GameStates.GamePlayingState.GamePlayingDisplay import GamePlayingDisplay
-from GameStates.GamePlayingState.GamePlayingPlayer import GamePlayingPlayer, MovementStates
+from Entities.PlayerEntity import PlayerEntity, MovementStates
+from Entities.EntityManager import EntityManager
 
 
 class GamePlayingStateManager(object):
+    SCORE_DELTA = 10
+
     def __init__(self, screen):
         self.display = GamePlayingDisplay(screen)
-        self.player = GamePlayingPlayer()
+        self.entityManager = EntityManager()
+        self.entityManager.addPlayerEntity()
+        self.player = self.entityManager.getPlayerEntity()
+        self.score = 0
 
     def tick(self):
-        self.player.stepFrame()
-        self.player.incrementScore()
-        self.display.setScore(self.player.getScore())
+        self.entityManager.updateAll()
+        self.incrementScore()
+        self.display.setScore(self.getScore())
         self.display.updatePlayerData(self.player.getCurrentPlayerState())
         self.display.updateScreen()
 
@@ -31,6 +37,12 @@ class GamePlayingStateManager(object):
 
     def reset(self):
         pass
+
+    def incrementScore(self):
+        self.score += GamePlayingStateManager.SCORE_DELTA
+
+    def getScore(self):
+        return self.score
 
 
 def transitionToPaused():
