@@ -1,4 +1,3 @@
-import pygame
 import unittest
 from Pokerunner import Pokerunner
 from GameStates.GameStates import GameStates
