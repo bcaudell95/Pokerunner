@@ -19,11 +19,12 @@ class PlayerEntity(Entity):
     # Coefficient used to calculate jump motion
     PARABOLA_COEFF = -4 * MAX_JUMP_HEIGHT_PX / math.pow(TOTAL_FRAMES_PER_SHEET, 2)
 
-    def __init__(self):
+    def __init__(self, coords):
         self.currentMovementState = MovementStates.RUNNING
         self.currentElement = Elements.NORMAL
         self.sheets = [createSheetForElement(e) for e in Elements]
         self.currentAnimation = Animation(self.sheets[0].sheets[0], PlayerEntity.FRAMES_PER_IMAGE)
+        self.baseCoords = coords
 
     def tick(self):
         if self.currentAnimation != None:
@@ -31,6 +32,9 @@ class PlayerEntity(Entity):
 
     def getImage(self):
         return self.currentAnimation.getCurrentImage()
+
+    def getCoords(self):
+        return [self.baseCoords[0], self.baseCoords[1] - self.calculateHeight()]
 
     def getCurrentFormSheet(self):
         return self.sheets[self.currentElement.value]
