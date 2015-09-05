@@ -1,38 +1,36 @@
 import pygame
-from GUI import GuiConfig
+from GUI import GuiConfig, images
+from GameStates.GamePlayingState.GamePlayingBackdropManager import BackdropManager
 
 pygame.font.init()
 
 
 class GamePlayingDisplay:
-    backdropSize = (3072, 768)
-    floorY = 638
+    backdropSize = BackdropManager.getBackDropSize()
+    floorY = GuiConfig.floorY
 
-    backdropFiles = ['assets/images/backdrop.png', 'assets/images/backdrop1.png']
-    backdrops = [pygame.image.load(file) for file in backdropFiles]
-
-    playerDrawCoordinates = (100, 512)
+    playerDrawCoordinates = GuiConfig.playerDrawCoordinates
     playerSpeedX = 10
 
-    scoreBorderImage = pygame.image.load('assets/images/ScoreBorder.png')
-    scoreBorderDimensions = (256, 64)
+    scoreBorderImage = images.scoreBorderImage
+    scoreBorderDimensions = GuiConfig.scoreBorderDimensions
 
-    scoreFontFile = 'assets/fonts/AndaleMono.ttf'
-    scoreFont = pygame.font.Font(scoreFontFile, 48)
-    scoreFontColor = (0, 0, 0)
-    scoreCountDrawCoords = (5, 10)
+    scoreFont = pygame.font.Font(GuiConfig.scoreFontFile, GuiConfig.scoreFontSizePts)
+    scoreFontColor = GuiConfig.scoreFontColor
+    scoreDrawCoords = GuiConfig.scoreDrawCoords
 
     def __init__(self, screen):
-        self.currentBackdropIndex = 0
+        self.backdropManager = BackdropManager(self.drawBackdrops)
         self.playerX = 0
         self.score = 0
+        self.playerState = None
         self.screen = screen
 
     def setScore(self, score):
         self.score = score
 
     def updateScreen(self, entitiesToDraw):
-        self.drawBackdrop()
+        self.backdropManager.draw()
         self.drawScore()
         for entity in entitiesToDraw:
             self.drawImage(entity[0], entity[1])
@@ -48,38 +46,24 @@ class GamePlayingDisplay:
     def checkPlayerRollover(self):
         if self.playerX >= GamePlayingDisplay.backdropSize[0]:
             self.playerX -= GamePlayingDisplay.backdropSize[0]
-            self.endOfBackdropReached()
+            self.backdropManager.endOfBackdropReached()
 
-    def drawBackdrop(self):
-        self.drawImage(self.getCurrentBackdrop(), self.getCoordinatesForCurrentBackdrop())
+    def drawBackdrops(self, backdrops):
+        self.drawImage(backdrops[0], self.getCoordinatesForCurrentBackdrop())
         if self.isBackDropBoundaryVisible():
-            self.drawImage(self.getNextBackdrop(), self.getCoordinatesForNextBackdrop())
+            self.drawImage(backdrops[1], self.getCoordinatesForNextBackdrop())
 
     def drawImage(self, image, coordinates):
         self.screen.blit(image, coordinates)
 
-    def getCurrentBackdrop(self):
-        return GamePlayingDisplay.backdrops[self.currentBackdropIndex]
+    def isBackDropBoundaryVisible(self):
+        return self.playerX >= GamePlayingDisplay.backdropSize[0] - GuiConfig.screenSize[0]
 
     def getCoordinatesForCurrentBackdrop(self):
         return (-1 * self.playerX, 0)
 
-    def isBackDropBoundaryVisible(self):
-        return self.playerX >= GamePlayingDisplay.backdropSize[0] - GuiConfig.screenSize[0]
-
     def getCoordinatesForNextBackdrop(self):
         return (GamePlayingDisplay.backdropSize[0] - self.playerX, 0)
-
-    def getNextBackdrop(self):
-        if self.currentBackdropIndex + 1 < len(GamePlayingDisplay.backdrops):
-            return GamePlayingDisplay.backdrops[self.currentBackdropIndex + 1]
-        else:
-            return GamePlayingDisplay.backdrops[0]
-
-    def endOfBackdropReached(self):
-        self.currentBackdropIndex += 1
-        if self.currentBackdropIndex == len(GamePlayingDisplay.backdrops):
-            self.currentBackdropIndex = 0
 
     def drawScore(self):
         self.drawScoreBorder()
@@ -89,7 +73,7 @@ class GamePlayingDisplay:
         self.drawImage(GamePlayingDisplay.scoreBorderImage, (0, 0))
 
     def drawScoreCounter(self):
-        self.drawImage(self.getScoreNumberImage(), GamePlayingDisplay.scoreCountDrawCoords)
+        self.drawImage(self.getScoreNumberImage(), GamePlayingDisplay.scoreDrawCoords)
 
     def getScoreNumberImage(self):
         scoreString = self.getScoreAsFormattedString()
