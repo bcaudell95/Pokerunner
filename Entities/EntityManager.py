@@ -74,6 +74,8 @@ class EntityManager(object):
 	def enterCollision(self, entity1, entity2):
 		print("Entering Collision...")
 		self.activeCollisionPairs.append((entity1, entity2))
+		entity1.handleCollisionWith(entity2)
+		entity2.handleCollisionWith(entity1)
 	
 	def exitCollision(self, entity1, entity2):
 		if (entity1, entity2) in self.activeCollisionPairs:

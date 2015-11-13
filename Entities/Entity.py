@@ -13,3 +13,6 @@ class Entity(object):
 		
 	def getBoundingBox(self):
 		pass
+
+	def handleCollisionWith(self, otherEntity):
+		pass

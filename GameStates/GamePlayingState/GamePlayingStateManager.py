@@ -13,6 +13,7 @@ class GamePlayingStateManager(object):
 		self.display = GamePlayingDisplay(screen)
 		self.setUpEntityManager()
 		self.player = self.entityManager.getPlayerEntity()
+		self.display.setHealthQuery(self.player.getHealth)
 		self.score = 0
 
 	def tick(self):

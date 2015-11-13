@@ -1,4 +1,5 @@
 from Entities.Entity import Entity
+from Entities.GeostationaryEntity import GeostationaryEntity
 from Elements import Elements, getElementSheetFile
 from FormSheet import FormSheet
 from GUI.Animation import Animation
@@ -15,6 +16,7 @@ class PlayerEntity(Entity):
 	FRAMES_PER_IMAGE = 3
 	TOTAL_FRAMES_PER_SHEET = 24
 	MAX_JUMP_HEIGHT_PX = 200
+	STARTING_HEALTH = 3
 
 	# Coefficient used to calculate jump motion
 	PARABOLA_COEFF = -4 * MAX_JUMP_HEIGHT_PX / math.pow(TOTAL_FRAMES_PER_SHEET, 2)
@@ -25,6 +27,7 @@ class PlayerEntity(Entity):
 		self.sheets = [createSheetForElement(e) for e in Elements]
 		self.currentAnimation = Animation(self.sheets[0].sheets[0], PlayerEntity.FRAMES_PER_IMAGE)
 		self.baseCoords = coords
+		self.health = PlayerEntity.STARTING_HEALTH
 
 	def tick(self):
 		if self.currentAnimation != None:
@@ -35,6 +38,9 @@ class PlayerEntity(Entity):
 
 	def getCoords(self):
 		return [self.baseCoords[0], self.baseCoords[1] - self.calculateHeight()]
+		
+	def getHealth(self):
+		return self.health
 
 	def getCurrentFormSheet(self):
 		return self.sheets[self.currentElement.value]
@@ -81,6 +87,11 @@ class PlayerEntity(Entity):
 		x2 = x1 + self.getImage().get_size()[0]
 		y2 = y1 + self.getImage().get_size()[1]
 		return (x1, y1, x2, y2)
+		
+	def handleCollisionWith(self, otherEntity):
+		if isinstance(otherEntity, GeostationaryEntity):
+			print("Hit obstacle!")
+			self.health -= 1
 
 def createSheetForElement(element):
 	return FormSheet(getElementSheetFile(element.name))
