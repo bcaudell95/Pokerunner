@@ -56,11 +56,10 @@ class EntityManager(object):
 			currentCollisionStatus = self.isPairInActiveCollisionList(entity1, entity2)
 			if areColliding(entity1, entity2):
 				if not currentCollisionStatus:
-					print("Entering Collision...")
-					self.activeCollisionPairs.append((entity1, entity2))
+					self.enterCollision(entity1, entity2)
 			else:
 				if currentCollisionStatus:
-					self.removePairFromActiveCollisionList(entity1, entity2)
+					self.exitCollision(entity1, entity2)
 
 	def getAllEntityPairs(self):
 		pairs = []
@@ -72,7 +71,11 @@ class EntityManager(object):
 	def isPairInActiveCollisionList(self, entity1, entity2):
 		return (entity1, entity2) in self.activeCollisionPairs or (entity2, entity1) in self.activeCollisionPairs
 		
-	def removePairFromActiveCollisionList(self, entity1, entity2):
+	def enterCollision(self, entity1, entity2):
+		print("Entering Collision...")
+		self.activeCollisionPairs.append((entity1, entity2))
+	
+	def exitCollision(self, entity1, entity2):
 		if (entity1, entity2) in self.activeCollisionPairs:
 			print("Exiting collision")
 			self.activeCollisionPairs.remove((entity1, entity2))
