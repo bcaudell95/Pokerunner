@@ -64,4 +64,4 @@ def transitionToPaused():
 	raise StateTransition(GameState.PAUSED)
 	
 def gameOver():
-	raise StateTransition(GameState.MAIN_MENU)
+	raise StateTransition(GameState.CREDITS)

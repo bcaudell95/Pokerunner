@@ -3,6 +3,7 @@ from GameStates.GameStates import GameState
 from GameStates.GameStates import StateTransition
 from GameStates.GamePlayingState.GamePlayingStateManager import GamePlayingStateManager
 from GameStates.MainMenuState.MainMenuStateManager import MainMenuStateManager
+from GameStates.CreditsState.CreditsStateManager import CreditsStateManager
 from GameStates.PauseState.PauseStateManager import PauseStateManager
 from GUI import GuiConfig
 
@@ -15,7 +16,8 @@ class Pokerunner:
 	stateManagersDict = {
 		GameState.MAIN_MENU: MainMenuStateManager(SCREEN),
 		GameState.PLAYING: GamePlayingStateManager(SCREEN),
-		GameState.PAUSED: PauseStateManager(SCREEN)
+		GameState.PAUSED: PauseStateManager(SCREEN),
+		GameState.CREDITS: CreditsStateManager(SCREEN)
 	}
 
 	def __init__(self):
