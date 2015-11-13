@@ -89,10 +89,8 @@ class GamePlayingDisplay:
 
 	def drawHealth(self):
 		if self.healthQuery != None:
-			health = self.healthQuery()
-			if health > 0:
-				image = images.heartImage
-				for i in range(health):
-					x = GuiConfig.screenSize[0] - 10 - (i+1)*image.get_size()[0]
-					self.drawImage(image, (x, 10))
+			if self.healthQuery() > 0:
+				for i in range(self.healthQuery()):
+					x = GuiConfig.screenSize[0] - 10 - (i+1)*images.heartImage.get_size()[0]
+					self.drawImage(images.heartImage, (x, 10))
 		

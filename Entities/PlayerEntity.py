@@ -92,7 +92,12 @@ class PlayerEntity(Entity):
 		if isinstance(otherEntity, GeostationaryEntity):
 			print("Hit obstacle!")
 			self.health -= 1
+			self.checkForHealthEmpty()
 
+	def checkForHealthEmpty(self):
+		if self.health <= 0:
+			raise PlayerHealthEmptyException()
+	
 def createSheetForElement(element):
 	return FormSheet(getElementSheetFile(element.name))
 
@@ -101,3 +106,7 @@ class PlayerState:
 	def __init__(self, image, height):
 		self.image = image
 		self.height = height
+		
+class PlayerHealthEmptyException(Exception):
+	def __init__(self):
+		pass

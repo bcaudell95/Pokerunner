@@ -1,7 +1,7 @@
 import pygame
 from GameStates.GameStates import GameState, StateTransition
 from GameStates.GamePlayingState.GamePlayingDisplay import GamePlayingDisplay
-from Entities.PlayerEntity import PlayerEntity, MovementStates
+from Entities.PlayerEntity import PlayerEntity, MovementStates, PlayerHealthEmptyException
 from Entities.EntityManager import EntityManager
 from GUI import GuiConfig
 
@@ -17,12 +17,15 @@ class GamePlayingStateManager(object):
 		self.score = 0
 
 	def tick(self):
-		self.entityManager.updateAll()
-		self.entityManager.checkForCollisions()
-		self.incrementScore()
-		self.display.setScore(self.getScore())
-		self.display.updatePlayerData(self.player.getCurrentPlayerState())
-		self.display.updateScreen(self.entityManager.getAllEntitiesToDraw())
+		try:
+			self.entityManager.updateAll()
+			self.entityManager.checkForCollisions()
+			self.incrementScore()
+			self.display.setScore(self.getScore())
+			self.display.updatePlayerData(self.player.getCurrentPlayerState())
+			self.display.updateScreen(self.entityManager.getAllEntitiesToDraw())
+		except PlayerHealthEmptyException:
+			gameOver()
 
 	def handleEvent(self, event):
 		if self.isEventKeyDown(event):
@@ -38,7 +41,7 @@ class GamePlayingStateManager(object):
 			transitionToPaused()
 
 	def reset(self):
-		pass
+		self.player.health = 2
 
 	def incrementScore(self):
 		self.score += GamePlayingStateManager.SCORE_DELTA
@@ -59,3 +62,6 @@ class GamePlayingStateManager(object):
 
 def transitionToPaused():
 	raise StateTransition(GameState.PAUSED)
+	
+def gameOver():
+	raise StateTransition(GameState.MAIN_MENU)
