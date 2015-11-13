@@ -52,23 +52,38 @@ class EntityManager(object):
 			self.spawnBasicObstacle()
 
 	def checkForCollisions(self):
+		for (entity1, entity2) in self.getAllEntityPairs():
+			currentCollisionStatus = self.isPairInActiveCollisionList(entity1, entity2)
+			if areColliding(entity1, entity2):
+				if not currentCollisionStatus:
+					print("Entering Collision...")
+					self.activeCollisionPairs.append((entity1, entity2))
+			else:
+				if currentCollisionStatus:
+					self.removePairFromActiveCollisionList(entity1, entity2)
+
+	def getAllEntityPairs(self):
+		pairs = []
 		for (index, entity1) in enumerate(self.entities):
 			for entity2 in self.entities[index+1:]:
-				if areBoundingBoxesOverlapping(entity1.getBoundingBox(), entity2.getBoundingBox()):
-					if (entity1, entity2) not in self.activeCollisionPairs and (entity2, entity1) not in self.activeCollisionPairs:
-						self.activeCollisionPairs.append((entity1, entity2))
-						print("Entering collision!")
-				else:
-					if (entity1, entity2) in self.activeCollisionPairs:
-						print("Exiting collision")
-						self.activeCollisionPairs.remove((entity1, entity2))
-					if (entity2, entity1) in self.activeCollisionPairs:
-						print("Exiting collision")
-						self.activeCollisionPairs.remove((entity2, entity1))
-
-def areBoundingBoxesOverlapping(box1, box2):
-	(left1, top1, right1, bottom1) = box1
-	(left2, top2, right2, bottom2) = box2
+				pairs.append((entity1, entity2))
+		return pairs
+		
+	def isPairInActiveCollisionList(self, entity1, entity2):
+		return (entity1, entity2) in self.activeCollisionPairs or (entity2, entity1) in self.activeCollisionPairs
+		
+	def removePairFromActiveCollisionList(self, entity1, entity2):
+		if (entity1, entity2) in self.activeCollisionPairs:
+			print("Exiting collision")
+			self.activeCollisionPairs.remove((entity1, entity2))
+		if (entity2, entity1) in self.activeCollisionPairs:
+			print("Exiting collision")
+			self.activeCollisionPairs.remove((entity2, entity1))
+						
+def areColliding(entity1, entity2):
+	(left1, top1, right1, bottom1) = entity1.getBoundingBox()
+	(left2, top2, right2, bottom2) = entity2.getBoundingBox()
+	
 	return not (left2 > right1 or right2 < left1 or top2 > bottom1 or bottom2 < top1)
 	
 class PlayerNotInstantiatedException(Exception):
