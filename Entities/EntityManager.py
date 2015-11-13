@@ -69,7 +69,7 @@ class EntityManager(object):
 def areBoundingBoxesOverlapping(box1, box2):
 	(left1, top1, right1, bottom1) = box1
 	(left2, top2, right2, bottom2) = box2
-	return not (left2 > right1 or right2 < right1 or top2 > bottom1 or bottom2 < top1)
+	return not (left2 > right1 or right2 < left1 or top2 > bottom1 or bottom2 < top1)
 	
 class PlayerNotInstantiatedException(Exception):
 	def __init__(self):
