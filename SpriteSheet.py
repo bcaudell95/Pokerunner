@@ -1,6 +1,5 @@
 import pygame
 
-
 class SpriteSheet(object):
     TRANS_BLACK_RGBA = (0, 0, 0, 0)
 
