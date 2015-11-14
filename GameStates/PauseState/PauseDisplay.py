@@ -1,12 +1,10 @@
 import pygame
-
+from GUI import images
 
 class PauseDisplay(object):
-    PAUSE_IMAGE_FILE = 'assets/images/Pause.png'
 
     def __init__(self, screen):
         self.screen = screen
-        self.pauseScreenOverlay = pygame.image.load(PauseDisplay.PAUSE_IMAGE_FILE).convert_alpha()
         self.overlayShown = False
 
     def updateScreen(self):
@@ -18,7 +16,7 @@ class PauseDisplay(object):
 
     def drawBackground(self):
         self.overlayShown = True
-        self.drawImage(self.pauseScreenOverlay, (0, 0))
+        self.drawImage(images.pauseScreenOverlay, (0, 0))
 
     def drawImage(self, image, coordinates):
         self.screen.blit(image, coordinates)

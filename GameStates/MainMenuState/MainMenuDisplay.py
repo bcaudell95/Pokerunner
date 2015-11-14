@@ -1,19 +1,16 @@
 import pygame
 from GUI.Button import Button
+from GUI import images
 from GameStates.GameStates import GameState, StateTransition
 
 
 class MainMenuDisplay(object):
-    BACKGROUND_IMAGE_FILE = 'assets/images/MainMenu.png'
-    BACKGROUND_IMAGE = pygame.image.load(BACKGROUND_IMAGE_FILE)
-
-    START_BUTTON_IMAGES = ['assets/images/Start_on.png', 'assets/images/Start_off.png']
     START_BUTTON_RECT = (412, 400, 200, 100)
     START_BUTTON_DRAW_COORDS = (START_BUTTON_RECT[0], START_BUTTON_RECT[1])
 
     def __init__(self, screen):
         self.screen = screen
-        self.startButton = Button.makeFromImagesList(MainMenuDisplay.START_BUTTON_IMAGES)
+        self.startButton = Button.makeFromImagesList(images.START_BUTTON_IMAGES_FILES)
         self.mousePos = (0, 0)
 
     def updateScreen(self):
@@ -21,7 +18,7 @@ class MainMenuDisplay(object):
         self.drawStartButton()
 
     def drawBackground(self):
-        self.drawImage(MainMenuDisplay.BACKGROUND_IMAGE, (0, 0))
+        self.drawImage(images.mainMenuBackdropImage, (0, 0))
 
     def drawStartButton(self):
         self.drawImage(self.startButton.getImage(), MainMenuDisplay.START_BUTTON_DRAW_COORDS)

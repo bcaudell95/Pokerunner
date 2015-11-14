@@ -41,7 +41,7 @@ class GamePlayingStateManager(object):
 			transitionToPaused()
 
 	def reset(self):
-		self.player.health = 2
+		pass
 
 	def incrementScore(self):
 		self.score += GamePlayingStateManager.SCORE_DELTA
