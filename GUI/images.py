@@ -1,6 +1,9 @@
 import pygame
 
 # Game Elements
+backdropFiles = ['assets/images/backdrop.png', 'assets/images/backdrop1.png']
+backdrops = [pygame.image.load(file) for file in backdropFiles]
+
 scoreBorderImage = pygame.image.load('assets/images/ScoreBorder.png')
 basicObstacle = pygame.image.load('assets/images/basicObstacle.png')
 heartImage = pygame.image.load('assets/images/heart.png')

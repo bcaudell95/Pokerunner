@@ -1,13 +1,11 @@
 from pygame import image
-
+from GUI import images
 
 class BackdropManager(object):
-    backdropFiles = ['assets/images/backdrop.png', 'assets/images/backdrop1.png']
-    backdrops = [image.load(file) for file in backdropFiles]
 
     def __init__(self, drawFunction):
         self.drawFunction = drawFunction
-        self.backdropsToDraw = [BackdropManager.backdrops[0], BackdropManager.backdrops[1]]
+        self.backdropsToDraw = [images.backdrops[0], images.backdrops[1]]
 
     def draw(self):
         self.drawFunction(self.backdropsToDraw)
@@ -17,6 +15,6 @@ class BackdropManager(object):
 
     @classmethod
     def getBackDropSize(cls):
-        return BackdropManager.backdrops[0].get_size()
+        return images.backdrops[0].get_size()
 
 

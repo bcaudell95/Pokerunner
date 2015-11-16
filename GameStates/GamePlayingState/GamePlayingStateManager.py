@@ -3,6 +3,7 @@ from GameStates.GameStates import GameState, StateTransition
 from GameStates.GamePlayingState.GamePlayingDisplay import GamePlayingDisplay
 from Entities.PlayerEntity import PlayerEntity, MovementStates, PlayerHealthEmptyException
 from Entities.EntityManager import EntityManager
+from Elements import Elements
 from GUI import GuiConfig
 
 
@@ -39,6 +40,12 @@ class GamePlayingStateManager(object):
 			self.player.changeMovementState(MovementStates.JUMPING)
 		elif event.key == pygame.K_p:
 			transitionToPaused()
+		elif event.key == pygame.K_1:
+			print("NORMAL")
+			self.player.setElement(Elements.NORMAL)
+		elif event.key == pygame.K_2:
+			print("FIRE")
+			self.player.setElement(Elements.FIRE)
 
 	def reset(self):
 		pass

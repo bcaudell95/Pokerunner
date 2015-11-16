@@ -11,7 +11,6 @@ class MovementStates(Enum):
 	RUNNING = 0
 	JUMPING = 1
 
-
 class PlayerEntity(Entity):
 	FRAMES_PER_IMAGE = 3
 	TOTAL_FRAMES_PER_SHEET = 24
@@ -23,9 +22,9 @@ class PlayerEntity(Entity):
 
 	def __init__(self, coords):
 		self.currentMovementState = MovementStates.RUNNING
-		self.currentElement = Elements.NORMAL
-		self.sheets = [createSheetForElement(e) for e in Elements]
-		self.currentAnimation = Animation(self.sheets[0].sheets[0], PlayerEntity.FRAMES_PER_IMAGE)
+		self.currentElement = Elements.FIRE
+		self.sheets = { e : createSheetForElement(e) for e in Elements}
+		self.currentAnimation = Animation(self.sheets[self.currentElement].sheets[0], PlayerEntity.FRAMES_PER_IMAGE)
 		self.baseCoords = coords
 		self.health = PlayerEntity.STARTING_HEALTH
 
@@ -43,7 +42,7 @@ class PlayerEntity(Entity):
 		return self.health
 
 	def getCurrentFormSheet(self):
-		return self.sheets[self.currentElement.value]
+		return self.sheets[self.currentElement]
 
 	def getCurrentSpriteSheet(self):
 		return self.getCurrentFormSheet().sheets[self.currentMovementState._value_]
@@ -97,6 +96,10 @@ class PlayerEntity(Entity):
 	def checkForHealthEmpty(self):
 		if self.health <= 0:
 			raise PlayerHealthEmptyException()
+			
+	def setElement(self, element):
+		self.currentElement = element
+		self.currentAnimation = Animation(self.sheets[self.currentElement].sheets[0], PlayerEntity.FRAMES_PER_IMAGE)
 	
 def createSheetForElement(element):
 	return FormSheet(getElementSheetFile(element.name))
