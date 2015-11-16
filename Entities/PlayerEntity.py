@@ -24,7 +24,8 @@ class PlayerEntity(Entity):
 		self.currentMovementState = MovementStates.RUNNING
 		self.currentElement = Elements.FIRE
 		self.sheets = { e : createSheetForElement(e) for e in Elements}
-		self.currentAnimation = Animation(self.sheets[self.currentElement].sheets[0], PlayerEntity.FRAMES_PER_IMAGE)
+		self.animations = { e : Animation(self.sheets[e].sheets[0], PlayerEntity.FRAMES_PER_IMAGE) for e in Elements}
+		self.currentAnimation = self.animations[self.currentElement]
 		self.baseCoords = coords
 		self.health = PlayerEntity.STARTING_HEALTH
 
@@ -99,7 +100,7 @@ class PlayerEntity(Entity):
 			
 	def setElement(self, element):
 		self.currentElement = element
-		self.currentAnimation = Animation(self.sheets[self.currentElement].sheets[0], PlayerEntity.FRAMES_PER_IMAGE)
+		self.currentAnimation = self.animations[element]
 	
 def createSheetForElement(element):
 	return FormSheet(getElementSheetFile(element.name))

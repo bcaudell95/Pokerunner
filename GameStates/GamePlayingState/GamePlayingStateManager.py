@@ -41,10 +41,8 @@ class GamePlayingStateManager(object):
 		elif event.key == pygame.K_p:
 			transitionToPaused()
 		elif event.key == pygame.K_1:
-			print("NORMAL")
 			self.player.setElement(Elements.NORMAL)
 		elif event.key == pygame.K_2:
-			print("FIRE")
 			self.player.setElement(Elements.FIRE)
 
 	def reset(self):
