@@ -2,7 +2,7 @@ from Entities.Entity import Entity
 from Entities.GeostationaryEntity import GeostationaryEntity
 from Elements import Elements, getElementSheetFile
 from FormSheet import FormSheet
-from GUI.Animation import Animation
+from BetterAnimations import PlayerAnimation
 import math
 from enum import Enum
 
@@ -15,7 +15,7 @@ class PlayerEntity(Entity):
 	FRAMES_PER_IMAGE = 3
 	TOTAL_FRAMES_PER_SHEET = 24
 	MAX_JUMP_HEIGHT_PX = 200
-	STARTING_HEALTH = 3
+	STARTING_HEALTH = 12
 
 	# Coefficient used to calculate jump motion
 	PARABOLA_COEFF = -4 * MAX_JUMP_HEIGHT_PX / math.pow(TOTAL_FRAMES_PER_SHEET, 2)
@@ -23,30 +23,23 @@ class PlayerEntity(Entity):
 	def __init__(self, coords):
 		self.currentMovementState = MovementStates.RUNNING
 		self.currentElement = Elements.FIRE
-		self.sheets = { e : createSheetForElement(e) for e in Elements}
-		self.animations = { e : Animation(self.sheets[e].sheets[0], PlayerEntity.FRAMES_PER_IMAGE) for e in Elements}
-		self.currentAnimation = self.animations[self.currentElement]
+		self.animation = PlayerAnimation(['assets/images/running.png', 'assets/images/jumping.png'])
+		self.animation.setClusterCallback(1, self.endOfJump)
 		self.baseCoords = coords
 		self.health = PlayerEntity.STARTING_HEALTH
 
 	def tick(self):
-		if self.currentAnimation != None:
-			self.currentAnimation.tick()
+		if self.animation != None:
+			self.animation.tick()
 
 	def getImage(self):
-		return self.currentAnimation.getCurrentImage()
+		return self.animation.getCurrentFrame()
 
 	def getCoords(self):
 		return [self.baseCoords[0], self.baseCoords[1] - self.calculateHeight()]
 		
 	def getHealth(self):
 		return self.health
-
-	def getCurrentFormSheet(self):
-		return self.sheets[self.currentElement]
-
-	def getCurrentSpriteSheet(self):
-		return self.getCurrentFormSheet().sheets[self.currentMovementState._value_]
 
 	def checkForEndOfJump(self):
 		if MovementStates.JUMPING == self.currentMovementState:
@@ -58,8 +51,7 @@ class PlayerEntity(Entity):
 	def changeMovementState(self, state):
 		if self.currentMovementState is not state:
 			self.currentMovementState = state
-			self.loadAnimationForState(state)
-
+			self.animation.setCurrentCluster(state.value)
 
 	def calculateHeight(self):
 		return (self.calculateHeightOfJump() if self.isPlayerJumping() else 0)
@@ -69,17 +61,13 @@ class PlayerEntity(Entity):
 
 	def calculateHeightOfJump(self):
 		### Parabolic Motion
-		frameCount = self.currentAnimation.getAdjustedFrameCount()
+		frameCount = self.animation.getAdjustedFrameCount()
 		height = PlayerEntity.PARABOLA_COEFF * (frameCount) * ( frameCount - PlayerEntity.TOTAL_FRAMES_PER_SHEET)
 		return math.floor(height)
 
 	def endOfJump(self):
 		self.changeMovementState(MovementStates.RUNNING)
-
-	def loadAnimationForState(self, state):
-		self.currentAnimation = Animation(self.getCurrentSpriteSheet(), PlayerEntity.FRAMES_PER_IMAGE)
-		if self.isPlayerJumping():
-			self.currentAnimation.onConclusion(self.endOfJump)
+		self.animation.setCurrentCluster(0)
 			
 	def getBoundingBox(self):
 		x1 = self.baseCoords[0]
@@ -100,11 +88,7 @@ class PlayerEntity(Entity):
 			
 	def setElement(self, element):
 		self.currentElement = element
-		self.currentAnimation = self.animations[element]
-	
-def createSheetForElement(element):
-	return FormSheet(getElementSheetFile(element.name))
-
+		self.animation.setCurrentForm(element.value)
 
 class PlayerState:
 	def __init__(self, image, height):
