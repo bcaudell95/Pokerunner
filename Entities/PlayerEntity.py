@@ -1,11 +1,9 @@
 from Entities.Entity import Entity
 from Entities.GeostationaryEntity import GeostationaryEntity
-from Elements import Elements, getElementSheetFile
-from FormSheet import FormSheet
-from BetterAnimations import PlayerAnimation
+from Elements import Elements
+from GUI.BetterAnimations import PlayerAnimation
 import math
 from enum import Enum
-
 
 class MovementStates(Enum):
 	RUNNING = 0
