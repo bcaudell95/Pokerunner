@@ -1,6 +1,6 @@
 from Entities.Entity import Entity
 from Entities.GeostationaryEntity import GeostationaryEntity
-from Elements import Elements
+from MainConfig import Elements
 from GUI.BetterAnimations import PlayerAnimation
 import math
 from enum import Enum

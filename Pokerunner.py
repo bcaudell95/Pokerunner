@@ -9,7 +9,6 @@ from GUI import GuiConfig
 
 pygame.init()
 
-
 class Pokerunner:
 	SCREEN = pygame.display.set_mode(GuiConfig.screenSize)
 	FRAMES_PER_SECOND = 30

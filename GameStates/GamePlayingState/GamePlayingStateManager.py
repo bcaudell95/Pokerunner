@@ -3,7 +3,7 @@ from GameStates.GameStates import GameState, StateTransition
 from GameStates.GamePlayingState.GamePlayingDisplay import GamePlayingDisplay
 from Entities.PlayerEntity import PlayerEntity, MovementStates, PlayerHealthEmptyException
 from Entities.EntityManager import EntityManager
-from Elements import Elements
+from MainConfig import Elements
 from GUI import GuiConfig
 
 
