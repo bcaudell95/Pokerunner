@@ -1,19 +1,15 @@
 from Entities.Entity import Entity
 from Entities.GeostationaryEntity import GeostationaryEntity
-from MainConfig import Elements
+from MainConfig import Elements, MovementStates
 from GUI.BetterAnimations import PlayerAnimation
 import math
 from enum import Enum
-
-class MovementStates(Enum):
-	RUNNING = 0
-	JUMPING = 1
 
 class PlayerEntity(Entity):
 	FRAMES_PER_IMAGE = 3
 	TOTAL_FRAMES_PER_SHEET = 24
 	MAX_JUMP_HEIGHT_PX = 200
-	STARTING_HEALTH = 12
+	STARTING_HEALTH = 100
 
 	# Coefficient used to calculate jump motion
 	PARABOLA_COEFF = -4 * MAX_JUMP_HEIGHT_PX / math.pow(TOTAL_FRAMES_PER_SHEET, 2)
@@ -77,7 +73,7 @@ class PlayerEntity(Entity):
 	def handleCollisionWith(self, otherEntity):
 		if isinstance(otherEntity, GeostationaryEntity):
 			print("Hit obstacle!")
-			self.health -= 1
+			self.health -= 6
 			self.checkForHealthEmpty()
 
 	def checkForHealthEmpty(self):

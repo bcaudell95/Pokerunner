@@ -1,6 +1,7 @@
 import pygame
 from GUI import GuiConfig, images
 from GameStates.GamePlayingState.GamePlayingBackdropManager import BackdropManager
+from math import floor
 
 pygame.font.init()
 
@@ -90,7 +91,14 @@ class GamePlayingDisplay:
 	def drawHealth(self):
 		if self.healthQuery != None:
 			if self.healthQuery() > 0:
-				for i in range(self.healthQuery()):
-					x = GuiConfig.screenSize[0] - 10 - (i+1)*images.heartImage.get_size()[0]
-					self.drawImage(images.heartImage, (x, 10))
+				health = self.healthQuery()
+				index = floor(health/20)
+				index = 4 if index==5 else index
+				color = GuiConfig.healthDrawColors[index]
+				healthRect = (
+					GuiConfig.healthMaxX-(health*2), 
+					GuiConfig.healthMinY, 
+					health*2, 
+					GuiConfig.healthMaxY-GuiConfig.healthMinY)
+				self.screen.fill(color, healthRect)
 		
