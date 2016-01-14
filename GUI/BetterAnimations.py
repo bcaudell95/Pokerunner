@@ -1,16 +1,20 @@
 import pygame
+from pygame.transform import scale
+from GUI import GuiConfig
 
 # Class for a single animation
 class BasicAnimation:
 	TRANS_BLACK_RGBA = (0, 0, 0, 0)
 
-	def __init__(self, filename, frameSize, offset, frameCount):
+	def __init__(self, filename, frameSize, offset, frameCount, scaleFactor):
 		self.rawImage = pygame.image.load(filename).convert_alpha()
-		self.frameSize = frameSize
+		self.inputFrameSize = frameSize
+		self.outputFrameSize = frameSize if scaleFactor == 1 else list(map(lambda x : int(scaleFactor*x), frameSize))
 		self.offset = offset
 		self.frameCount = frameCount
 		self.ticksPerFrame = 3	# Default
 		self.callback = None # Default
+		self.isScaled = not scaleFactor == 1
 		
 		self.tickCount = 0
 		self.currentFrame = 0
@@ -27,7 +31,7 @@ class BasicAnimation:
 		return [self.imageRectByIndex(i) for i in range(self.frameCount)]
 		
 	def imageRectByIndex(self, i):
-		w, h = self.frameSize
+		w, h = self.inputFrameSize
 		x, y = self.offset
 		y = y + (i * h)
 		return (x, y, w, h)
@@ -37,6 +41,8 @@ class BasicAnimation:
 		image = pygame.Surface(rect.size).convert_alpha()
 		image.fill(BasicAnimation.TRANS_BLACK_RGBA)
 		image.blit(self.rawImage, (0,0), rect)
+		if self.isScaled:
+			image = scale(image, self.outputFrameSize)
 		return image
 		
 	def tick(self):
@@ -63,7 +69,7 @@ class BasicAnimation:
 # Class for multiple animations in a single file
 # This is used for multiple Eevee forms in one movement state image file
 class AnimationCluster:
-	def __init__(self, filename, frameSize, offset, frameCount, animationCount):
+	def __init__(self, filename, frameSize, offset, frameCount, animationCount, scaleFactor):
 		self.ticksPerFrame = 3 # default
 		self.tickCount = 0
 		tickQuery = lambda : self.tickCount
@@ -81,7 +87,7 @@ class AnimationCluster:
 		for a in range(animationCount):
 			x, y = offset
 			x = x + (frameSize[0] * a)
-			animation = BasicAnimation(filename, frameSize, (x,y), frameCount)
+			animation = BasicAnimation(filename, frameSize, (x,y), frameCount, scaleFactor)
 			animation.tickCount = tickQuery
 			animation.currentFrame = frameQuery
 			self.animations.append(animation)
@@ -114,14 +120,11 @@ class AnimationCluster:
 # Class for a player's entire animation suite
 # Multiple AnimationCluster's, one for each movement state			
 class PlayerAnimation:
-	FORMS_COUNT = 2
-	FRAME_COUNT = 8
-	FRAME_SIZE = (256, 128)
 
 	def __init__(self, filenames):
 		self.clusters = []
 		for file in filenames:
-			self.clusters.append(AnimationCluster(file, PlayerAnimation.FRAME_SIZE, (0,0), PlayerAnimation.FRAME_COUNT, PlayerAnimation.FORMS_COUNT))
+			self.clusters.append(AnimationCluster(file, GuiConfig.playerInputFrameSize, (0,0), GuiConfig.playerFramesPerAnimation, GuiConfig.playerForms, GuiConfig.playerFrameScale))
 
 		self.currentCluster = self.clusters[0]
 		self.clusterCount = len(self.clusters)

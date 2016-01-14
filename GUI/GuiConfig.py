@@ -1,7 +1,14 @@
 screenSize = (1024,768)
 floorY = 641
-playerDrawCoordinates = (100, 512)
 scoreBorderDimensions = (256, 64)
+
+playerFramesPerAnimation = 4
+playerForms = 2
+playerInputFrameSize = (784, 614)
+playerFrameScale = .35
+playerFrameSize = list(map(lambda x : playerFrameScale*x, playerInputFrameSize))
+playerFrameBottomMargin = 8
+playerDrawCoords = (10, floorY-playerFrameSize[1]+playerFrameBottomMargin)
 
 scoreFontFile = 'assets/fonts/AndaleMono.ttf'
 scoreFontSizePts = 48

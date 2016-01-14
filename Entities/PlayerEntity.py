@@ -7,7 +7,7 @@ from enum import Enum
 
 class PlayerEntity(Entity):
 	FRAMES_PER_IMAGE = 3
-	TOTAL_FRAMES_PER_SHEET = 24
+	TOTAL_FRAMES_PER_SHEET = 12
 	MAX_JUMP_HEIGHT_PX = 200
 	STARTING_HEALTH = 100
 
@@ -17,7 +17,7 @@ class PlayerEntity(Entity):
 	def __init__(self, coords):
 		self.currentMovementState = MovementStates.RUNNING
 		self.currentElement = Elements.FIRE
-		self.animation = PlayerAnimation(['assets/images/running.png', 'assets/images/jumping.png'])
+		self.animation = PlayerAnimation(['assets/images/RunningEeveeSheet.png', 'assets/images/jumping.png'])
 		self.animation.setClusterCallback(1, self.endOfJump)
 		self.baseCoords = coords
 		self.health = PlayerEntity.STARTING_HEALTH

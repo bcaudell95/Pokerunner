@@ -6,7 +6,6 @@ backdrops = [pygame.image.load(file) for file in backdropFiles]
 
 scoreBorderImage = pygame.image.load('assets/images/ScoreBorder.png')
 basicObstacle = pygame.image.load('assets/images/basicObstacle.png')
-heartImage = pygame.image.load('assets/images/heart.png')
 
 # Pause Screen Elements
 pauseScreenOverlay = pygame.image.load('assets/images/Pause.png')

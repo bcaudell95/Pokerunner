@@ -10,7 +10,7 @@ class GamePlayingDisplay:
 	backdropSize = BackdropManager.getBackDropSize()
 	floorY = GuiConfig.floorY
 
-	playerDrawCoordinates = GuiConfig.playerDrawCoordinates
+	playerDrawCoordinates = GuiConfig.playerDrawCoords
 	playerSpeedX = 10
 
 	scoreBorderImage = images.scoreBorderImage
